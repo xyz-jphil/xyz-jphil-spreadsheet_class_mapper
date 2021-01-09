@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.xyz-jphil</groupId>
+    <artifactId>xyz-jphil-spreadsheet_class_mapper</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <jsweet.transpiler.version>3.0.0</jsweet.transpiler.version>
+        <jsweet.core.version>6.3.0</jsweet.core.version>
+        <java.version.release>11</java.version.release>
+        <java.version>1.${java.version.release}</java.version>
+        <jstargetVersion>ES6</jstargetVersion>
+    </properties>
+    <name>xyz-jphil-spreadsheet_class_mapper</name>
+    <description>Used to map spreadsheet rows to classes safely</description>
+    <url>https://github.com/xyz-jphil/xyz-jphil-spreadsheet_class_mapper</url>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Ivan Velikanova</name>
+            <email>ivan.velikanova@gmail.com</email>
+            <organization>xyz-jphil</organization>
+            <organizationUrl>https://github.com/xyz-jphil</organizationUrl>
+        </developer>
+    </developers>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jsweet-plugins-release</id>
+            <name>plugins-release</name>
+            <url>http://repository.jsweet.org/artifactory/plugins-release-local</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots />
+            <id>jsweet-plugins-snapshots</id>
+            <name>plugins-snapshot</name>
+            <url>http://repository.jsweet.org/artifactory/plugins-snapshot-local</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>jsweet-central</id>
+            <name>libs-release</name>
+            <url>http://repository.jsweet.org/artifactory/libs-release-local</url>
+        </repository>
+        <repository>
+            <snapshots />
+            <id>jsweet-snapshots</id>
+            <name>libs-snapshot</name>
+            <url>http://repository.jsweet.org/artifactory/libs-snapshot-local</url>
+        </repository>
+    </repositories>
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>${java.version.release}</release>
+                    <compilerVersion>${java.version}</compilerVersion>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>			
+            <plugin>
+                <groupId>org.jsweet</groupId>
+                <artifactId>jsweet-maven-plugin</artifactId>
+                <version>${jsweet.transpiler.version}</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <bundle>true</bundle>
+                    <!-- <tsOut>src/main/resources/src/typings/${project.artifactId}/${project.version}</tsOut>
+                    <outDir>target/js</outDir> -->
+                    <declaration>true</declaration> <!-- not there in the non-candy quickstart -->
+                    <outDir>src/main/resources/META-INF/resources/webjars/${project.artifactId}/${project.version}</outDir>
+                    <!-- not there is chart.js <dtsOut>src/main/resources/src/typings/${project.artifactId}/${project.version}</dtsOut> -->
+                    <tsOut>src/main/resources/META-INF/resources/typings/${project.artifactId}/${project.version}</tsOut>
+                    <encoding>UTF-8</encoding>                    
+                    <targetVersion>${jstargetVersion}</targetVersion> <!-- set to ES3 in candy examples -->
+                    <!-- <module>none</module>
+                    <moduleResolution>classic</moduleResolution> --> <!-- not there in chart.js -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-js</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>jsweet</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>	
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <!-- <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <echo message="copying generated bundles to dist..." />
+                                <copy
+                                    file="src/main/resources/META-INF/resources/webjars/${project.artifactId}/${project.version}/bundle.js"
+                                    tofile="dist/${project.artifactId}.js" verbose="true" />
+                                <copy
+                                    file="src/main/resources/src/typings/${project.artifactId}/${project.version}/bundle.d.ts"
+                                    tofile="dist/${project.artifactId}.d.ts" verbose="true" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution> -->
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <echo message="copying generated bundles to dist..." />	
+                                <mkdir dir="dist/"></mkdir>				
+                                <copy
+                                    file="src/main/resources/META-INF/resources/typings/${project.artifactId}/${project.version}/bundle.d.ts"
+                                    tofile="dist/${project.artifactId}.d.ts" verbose="true"
+                                    failonerror="false" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <!-- <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <echo message="copying generated bundles to dist..." />
+                                <mkdir dir="target/dist/"></mkdir>
+                                <copy
+                                    file="target/js/bundle.js"
+                                    tofile="target/dist/${project.artifactId}.js" verbose="true"
+                                    failonerror="false" />
+                                <copy
+                                    file="target/ts/bundle.d.ts"
+                                    tofile="target/dist/${project.artifactId}.d.ts" verbose="true"
+                                    failonerror="false" />
+                                <echo message="copying JavaScript lib to resources..." />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution> -->
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <javadocVersion>1.8</javadocVersion>
+                    <sourcepath>src/main/java</sourcepath>
+                    <skip>${skipJavadoc}</skip>
+                    <encoding>UTF-8</encoding>
+                    <fixTags>all</fixTags>
+                    <failOnError>false</failOnError>
+                    <!-- leave these options unchanged to place the Javadoc at the right place for jsweet.org -->
+                    <reportOutputDirectory>/var/www/apidocs/releases/org/jsweet/candies</reportOutputDirectory>
+                    <destDir>${project.artifactId}/${project.version}</destDir>
+                    <!-- end of jsweet.org configuration -->
+                    <header><![CDATA[<a href="http://www.jsweet.org" target="_blank" style="text-transform: lowercase">http://www.jsweet.org<a>]]></header>
+                    <bottom><![CDATA[<center>Copyright 2015, <a href="http://www.cincheo.org" target="_blank">CinchÃ©o SAS<a> - Web site: <a href="http://www.jsweet.org" target="_blank">http://www.jsweet.org<a><center>]]></bottom>
+                    <stylesheetfile>/var/www/apidocs/stylesheet.css</stylesheetfile>
+                </configuration>
+                <!-- Disable javadoc for now -->
+                <!-- 
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                -->
+            </plugin>
+        </plugins>
+    </build>
+    <!-- } End of JSweet Specific -->
+    <!-- Maven OSSRH Specifiec -->
+    <scm>
+        <connection>scm:git:git://github.com/xyz-jphil/xyz-jphil-patterns-lambda.git</connection>
+        <developerConnection>scm:git:ssh://github.com:xyz-jphil/xyz-jphil-patterns-lambda.git</developerConnection>
+        <url>http://github.com/simpligility/ossrh-demo/tree/master</url>
+    </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+    <profiles>
+        <profile> 
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <configuration>
+                            <source>8</source>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
