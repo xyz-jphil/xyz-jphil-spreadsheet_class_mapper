@@ -1,18 +1,22 @@
-/* Generated from Java with JSweet 3.0.0 - http://www.jsweet.org */
 var xyz;
 (function (xyz) {
     var jphil;
     (function (jphil) {
         var spreadsheet_class_mapper;
         (function (spreadsheet_class_mapper) {
-            let ForLoop;
-            (function (ForLoop) {
-                let RESULT;
-                (function (RESULT) {
-                    RESULT[RESULT["BREAK"] = 0] = "BREAK";
-                    RESULT[RESULT["CONTINUE"] = 1] = "CONTINUE";
-                })(RESULT = ForLoop.RESULT || (ForLoop.RESULT = {}));
-            })(ForLoop = spreadsheet_class_mapper.ForLoop || (spreadsheet_class_mapper.ForLoop = {}));
+            /**
+             *
+             * @author
+             * @enum
+             * @property {xyz.jphil.spreadsheet_class_mapper.ForLoopResult} BREAK
+             * @property {xyz.jphil.spreadsheet_class_mapper.ForLoopResult} CONTINUE
+             * @class
+             */
+            let ForLoopResult;
+            (function (ForLoopResult) {
+                ForLoopResult[ForLoopResult["BREAK"] = 0] = "BREAK";
+                ForLoopResult[ForLoopResult["CONTINUE"] = 1] = "CONTINUE";
+            })(ForLoopResult = spreadsheet_class_mapper.ForLoopResult || (spreadsheet_class_mapper.ForLoopResult = {}));
         })(spreadsheet_class_mapper = jphil.spreadsheet_class_mapper || (jphil.spreadsheet_class_mapper = {}));
     })(jphil = xyz.jphil || (xyz.jphil = {}));
 })(xyz || (xyz = {}));

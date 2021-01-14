@@ -17,7 +17,7 @@
     </properties>
     <name>xyz-jphil-spreadsheet_class_mapper</name>
     <description>Used to map spreadsheet rows to classes safely</description>
-    <url>https://github.com/xyz-jphil/xyz-jphil-spreadsheet_class_mapper</url>
+    <url>https://github.com/xyz-jphil/${project.artifactId}</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -32,6 +32,13 @@
             <organizationUrl>https://github.com/xyz-jphil</organizationUrl>
         </developer>
     </developers>
+    <dependencies>
+        <dependency>
+            <groupId>org.jsweet</groupId>
+            <artifactId>jsweet-core</artifactId>
+            <version>${jsweet.core.version}</version>
+        </dependency>
+    </dependencies>
     <pluginRepositories>
         <pluginRepository>
             <id>jsweet-plugins-release</id>
@@ -83,18 +90,17 @@
                 <artifactId>jsweet-maven-plugin</artifactId>
                 <version>${jsweet.transpiler.version}</version>
                 <configuration>
+                    <sourceMap>false</sourceMap>
                     <verbose>true</verbose>
                     <bundle>true</bundle>
-                    <!-- <tsOut>src/main/resources/src/typings/${project.artifactId}/${project.version}</tsOut>
-                    <outDir>target/js</outDir> -->
-                    <declaration>true</declaration> <!-- not there in the non-candy quickstart -->
                     <outDir>src/main/resources/META-INF/resources/webjars/${project.artifactId}/${project.version}</outDir>
-                    <!-- not there is chart.js <dtsOut>src/main/resources/src/typings/${project.artifactId}/${project.version}</dtsOut> -->
-                    <tsOut>src/main/resources/META-INF/resources/typings/${project.artifactId}/${project.version}</tsOut>
-                    <encoding>UTF-8</encoding>                    
-                    <targetVersion>${jstargetVersion}</targetVersion> <!-- set to ES3 in candy examples -->
-                    <!-- <module>none</module>
-                    <moduleResolution>classic</moduleResolution> --> <!-- not there in chart.js -->
+                    <dtsOut>src/main/resources/META-INF/resources/typings/${project.artifactId}/${project.version}</dtsOut>
+                    <javaCompilerExtraOptions>-source,1.8,-target,1.8</javaCompilerExtraOptions>
+                    <encoding>UTF-8</encoding>
+                    <declaration>true</declaration>
+                    <tsserver>true</tsserver>
+                    <targetVersion>${jstargetVersion}</targetVersion>
+                    <moduleResolution>classic</moduleResolution>
                 </configuration>
                 <executions>
                     <execution>
@@ -113,66 +119,6 @@
                     </execution>
                 </executions>
             </plugin>	
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <!-- <execution>
-                        <phase>install</phase>
-                        <configuration>
-                            <target>
-                                <echo message="copying generated bundles to dist..." />
-                                <copy
-                                    file="src/main/resources/META-INF/resources/webjars/${project.artifactId}/${project.version}/bundle.js"
-                                    tofile="dist/${project.artifactId}.js" verbose="true" />
-                                <copy
-                                    file="src/main/resources/src/typings/${project.artifactId}/${project.version}/bundle.d.ts"
-                                    tofile="dist/${project.artifactId}.d.ts" verbose="true" />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution> -->
-                    <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <target>
-                                <echo message="copying generated bundles to dist..." />	
-                                <mkdir dir="dist/"></mkdir>				
-                                <copy
-                                    file="src/main/resources/META-INF/resources/typings/${project.artifactId}/${project.version}/bundle.d.ts"
-                                    tofile="dist/${project.artifactId}.d.ts" verbose="true"
-                                    failonerror="false" />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <!-- <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <target>
-                                <echo message="copying generated bundles to dist..." />
-                                <mkdir dir="target/dist/"></mkdir>
-                                <copy
-                                    file="target/js/bundle.js"
-                                    tofile="target/dist/${project.artifactId}.js" verbose="true"
-                                    failonerror="false" />
-                                <copy
-                                    file="target/ts/bundle.d.ts"
-                                    tofile="target/dist/${project.artifactId}.d.ts" verbose="true"
-                                    failonerror="false" />
-                                <echo message="copying JavaScript lib to resources..." />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution> -->
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -197,22 +143,14 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
                 <configuration>
-                    <javadocVersion>1.8</javadocVersion>
                     <sourcepath>src/main/java</sourcepath>
                     <skip>${skipJavadoc}</skip>
                     <encoding>UTF-8</encoding>
                     <fixTags>all</fixTags>
                     <failOnError>false</failOnError>
-                    <!-- leave these options unchanged to place the Javadoc at the right place for jsweet.org -->
-                    <reportOutputDirectory>/var/www/apidocs/releases/org/jsweet/candies</reportOutputDirectory>
+                    <source>8</source>
                     <destDir>${project.artifactId}/${project.version}</destDir>
-                    <!-- end of jsweet.org configuration -->
-                    <header><![CDATA[<a href="http://www.jsweet.org" target="_blank" style="text-transform: lowercase">http://www.jsweet.org<a>]]></header>
-                    <bottom><![CDATA[<center>Copyright 2015, <a href="http://www.cincheo.org" target="_blank">CinchÃ©o SAS<a> - Web site: <a href="http://www.jsweet.org" target="_blank">http://www.jsweet.org<a><center>]]></bottom>
-                    <stylesheetfile>/var/www/apidocs/stylesheet.css</stylesheetfile>
                 </configuration>
-                <!-- Disable javadoc for now -->
-                <!-- 
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
@@ -221,16 +159,13 @@
                         </goals>
                     </execution>
                 </executions>
-                -->
             </plugin>
         </plugins>
     </build>
-    <!-- } End of JSweet Specific -->
-    <!-- Maven OSSRH Specifiec -->
     <scm>
-        <connection>scm:git:git://github.com/xyz-jphil/xyz-jphil-patterns-lambda.git</connection>
-        <developerConnection>scm:git:ssh://github.com:xyz-jphil/xyz-jphil-patterns-lambda.git</developerConnection>
-        <url>http://github.com/simpligility/ossrh-demo/tree/master</url>
+        <connection>scm:git:git://github.com/xyz-jphil/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:ssh://github.com:xyz-jphil/${project.artifactId}.git</developerConnection>
+        <url>http://github.com/github.com:xyz-jphil/${project.artifactId}/tree/master</url>
     </scm>
     <distributionManagement>
         <snapshotRepository>

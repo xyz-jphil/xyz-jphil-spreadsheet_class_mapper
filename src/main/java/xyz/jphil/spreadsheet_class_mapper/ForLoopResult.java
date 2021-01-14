@@ -15,12 +15,10 @@
  */
 package xyz.jphil.spreadsheet_class_mapper;
 
-import java.util.List;
-
 /**
  *
  * @author
  */
-public interface ForLoop {
-    ForLoopResult loop(int currRow_A1,int lastRow_A1,List<Object> data);
+public enum ForLoopResult {
+    BREAK,CONTINUE;
 }
